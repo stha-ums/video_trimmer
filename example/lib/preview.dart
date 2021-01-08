@@ -20,8 +20,9 @@ class _PreviewState extends State<Preview> {
     super.initState();
 
     _controller = VideoPlayerController.file(File(widget.outputVideoPath))
-      ..initialize().then((_) {
+      ..initialize().then((_) async {
         setState(() {});
+        await _controller.setLooping(true);
         _controller.play();
       });
   }
@@ -34,26 +35,20 @@ class _PreviewState extends State<Preview> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: Text("Preview"),
-      ),
-      body: Center(
-        child: AspectRatio(
-          aspectRatio: _controller.value.aspectRatio,
-          child: _controller.value.initialized
-              ? Container(
-                  child: VideoPlayer(_controller),
-                )
-              : Container(
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.white,
-                    ),
+    return Center(
+      child: AspectRatio(
+        aspectRatio: _controller.value.aspectRatio,
+        child: _controller.value.initialized
+            ? Container(
+                child: VideoPlayer(_controller),
+              )
+            : Container(
+                child: Center(
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.white,
                   ),
                 ),
-        ),
+              ),
       ),
     );
   }

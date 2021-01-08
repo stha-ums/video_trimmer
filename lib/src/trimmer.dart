@@ -1,4 +1,6 @@
-import 'dart:io';
+
+
+  import 'dart:io';
 import 'package:path/path.dart';
 
 import 'package:flutter/material.dart';
@@ -17,7 +19,8 @@ import 'package:video_trimmer/src/trim_editor.dart';
 /// * [saveTrimmedVideo()]
 /// * [videPlaybackControl()]
 class Trimmer {
-  static File currentVideoFile;
+   File currentVideoFile;
+  VideoPlayerController videoPlayerController;
 
   final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
 
@@ -30,16 +33,13 @@ class Trimmer {
       videoPlayerController = VideoPlayerController.file(currentVideoFile);
       await videoPlayerController.initialize().then((_) {
         TrimEditor(
+          videoFile: currentVideoFile,
+          videoPlayerController: videoPlayerController,
           viewerHeight: 50,
           viewerWidth: 50.0 * 8,
           // currentVideoFile: currentVideoFile,
         );
       });
-      // TrimEditor(
-      //   viewerHeight: 50,
-      //   viewerWidth: 50.0 * 8,
-      //   // currentVideoFile: currentVideoFile,
-      // );
     }
   }
 
@@ -50,7 +50,7 @@ class Trimmer {
     Directory _directory;
 
     if (storageDir == null) {
-      _directory = await getApplicationDocumentsDirectory();
+      _directory = await getTemporaryDirectory();
     } else {
       switch (storageDir.toString()) {
         case 'temporaryDirectory':
@@ -152,8 +152,8 @@ class Trimmer {
   /// crash.
   ///
   Future<String> saveTrimmedVideo({
-    @required double startValue,
-    @required double endValue,
+    @required Duration startPoint,
+    @required Duration endPoint ,
     bool applyVideoEncoding = false,
     FileFormat outputFormat,
     String ffmpegCommand,
@@ -200,9 +200,6 @@ class Trimmer {
     ).whenComplete(
       () => print("Retrieved Trimmer folder"),
     );
-
-    Duration startPoint = Duration(milliseconds: startValue.toInt());
-    Duration endPoint = Duration(milliseconds: endValue.toInt());
 
     // Checking the start and end point strings
     print("Start: ${startPoint.toString()} & End: ${endPoint.toString()}");

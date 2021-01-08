@@ -38,6 +38,8 @@ class TrimEditorPainter extends CustomPainter {
   /// `Colors.white`.
   final Color scrubberPaintColor;
 
+  final Color ractangleFillColor;
+
   /// For drawing the trim editor slider
   ///
   /// The required parameters are [startPos], [endPos]
@@ -82,6 +84,8 @@ class TrimEditorPainter extends CustomPainter {
   /// scrubber inside the trim area. By default it is set to
   /// `Colors.white`.
   ///
+  ///
+
   TrimEditorPainter({
     @required this.startPos,
     @required this.endPos,
@@ -93,6 +97,7 @@ class TrimEditorPainter extends CustomPainter {
     this.borderPaintColor = Colors.white,
     this.circlePaintColor = Colors.white,
     this.scrubberPaintColor = Colors.white,
+    this.ractangleFillColor,
   })  : assert(startPos != null),
         assert(endPos != null),
         assert(scrubberAnimationDx != null),
@@ -107,6 +112,11 @@ class TrimEditorPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var borderPaint = Paint()
+      ..color = ractangleFillColor ?? Colors.green.withOpacity(.5)
+      ..style = PaintingStyle.fill
+      ..strokeCap = StrokeCap.round;
+
+    var fill = Paint()
       ..color = borderPaintColor
       ..strokeWidth = borderWidth
       ..style = PaintingStyle.stroke
@@ -137,6 +147,8 @@ class TrimEditorPainter extends CustomPainter {
     }
 
     canvas.drawRect(rect, borderPaint);
+    canvas.drawRect(rect, fill);
+
     canvas.drawCircle(
         startPos + Offset(0, endPos.dy / 2), circleSize, circlePaint);
     canvas.drawCircle(
