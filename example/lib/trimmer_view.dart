@@ -1,4 +1,3 @@
-import 'package:example/preview.dart';
 import 'package:flutter/material.dart';
 import 'package:video_trimmer/video_trimmer.dart';
 
@@ -14,7 +13,7 @@ class _TrimmerViewState extends State<TrimmerView> {
   double _endValue;
 
   // bool _isPlaying = false;
-  bool _progressVisibility = false;
+  // bool _progressVisibility = false;
 
   // Future<String> _saveVideo() async {
   //   setState(() {
